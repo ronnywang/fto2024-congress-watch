@@ -16,8 +16,9 @@
             <h1>Video</h1>
             <video id="video" controls width="100%"></video>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" style="max-height: 500px; overflow-y: scroll;">
             <h1>Transcript</h1>
+            <ul id="subtitles"></ul>
         </div>
     </div>
 <table class="table table-striped">
@@ -49,6 +50,21 @@ $.get('jp-video.csv', function(text) {
 }, 'text');
 $('#tbody').on('click', '.show-video', function(e) {
         e.preventDefault();
+        id = $(this).data('video').id;
+        $.get('/subtitles/' + id + '.json', function(data) {
+                // start, end, text
+                $('#subtitles').empty();
+                for (var i=0; i<data.length; i++) {
+                        var row = data[i];
+                        // 1195.799 =>  19:55.799
+                        var start = Math.floor(row.start);
+                        var minutes = Math.floor(start / 60);
+                        var seconds = start % 60;
+                        var text = minutes + ':' + seconds + ' ' + row.text;
+                        var li = $('<li>').text(text);
+                        $('#subtitles').append(li);
+                }
+        }, 'json');
     var row = $(this).data('video');
     var video = $('#video').get(0);
     if (Hls.isSupported()) {

@@ -51,7 +51,7 @@ $.get('jp-video.csv', function(text) {
 $('#tbody').on('click', '.show-video', function(e) {
         e.preventDefault();
         id = $(this).data('video').id;
-        $.get('/subtitles/' + id + '.json', function(data) {
+        $.get('subtitles/' + id + '.json', function(data) {
                 // start, end, text
                 $('#subtitles').empty();
                 for (var i=0; i<data.length; i++) {

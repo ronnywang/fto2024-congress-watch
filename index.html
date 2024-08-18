@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Congress Watch 2024</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.40/jquery.csv.min.js" integrity="sha512-Y8iWYJDo6HiTo5xtml1g4QqHtl/PO1w+dmUpQfQSOTqKNsMhExfyPN2ncNAe9JuJUSKzwK/b6oaNPop4MXzkwg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
+</head>
+<body>
+<div class="container">
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Video</th>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Committee</th>
+        </tr>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+</table>
+</div>
+<script>
+$.get('jp-video.csv', function(text) {
+    var data = $.csv.toObjects(text);
+    // id,country,date,title,video_link,tags
+    for (var i=1; i<data.length; i++) {
+        var row = data[i];
+        var tr = $('<tr>');
+        tr.append($('<td>').append($('<a>').attr('href', '#').addClass('show-video').data('video', row).text('play')));
+        tr.append($('<td>').text(row.date));
+        tr.append($('<td>').text(row.title));
+        tr.append($('<td>').text(row.tags));
+        $('#tbody').append(tr);
+    }
+}, 'text');
+</script>
+</body>
+</html>

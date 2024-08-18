@@ -6,10 +6,20 @@
 <title>Congress Watch 2024</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.40/jquery.csv.min.js" integrity="sha512-Y8iWYJDo6HiTo5xtml1g4QqHtl/PO1w+dmUpQfQSOTqKNsMhExfyPN2ncNAe9JuJUSKzwK/b6oaNPop4MXzkwg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.5.14/hls.min.js" integrity="sha512-js37JxjD6gtmJ3N2Qzl9vQm4wcmTilFffk0nTSKzgr3p6aitg73LR205203wTzCCC/NZYO2TAxSa0Lr2VMLQvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
 </head>
 <body>
 <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Video</h1>
+            <video id="video" controls width="100%"></video>
+        </div>
+        <div class="col-md-6">
+            <h1>Transcript</h1>
+        </div>
+    </div>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -37,6 +47,24 @@ $.get('jp-video.csv', function(text) {
         $('#tbody').append(tr);
     }
 }, 'text');
+$('#tbody').on('click', '.show-video', function(e) {
+        e.preventDefault();
+    var row = $(this).data('video');
+    var video = $('#video').get(0);
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(row.video_link);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play();
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = row.video_link;
+        video.addEventListener('loadedmetadata', function() {
+            video.play();
+        });
+    }
+});
 </script>
 </body>
 </html>
